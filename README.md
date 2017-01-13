@@ -11,4 +11,4 @@ SK 고용디딤돌 교육 자료
 - 3조 : https://github.com/june3377/wm_pj
 - 4조 : https://github.com/kyleyoo/saleslead
 - 5조 : https://github.com/joinan/mentos
-- 6조 : hhtps://github.com/smilekkk/Adego-
+- 6조 : https://github.com/smilekkk/Adego-
