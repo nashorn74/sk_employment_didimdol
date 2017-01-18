@@ -10,8 +10,8 @@ public class Animal {
 	int legs;//다리개수
 	int wings;//날개쌍
 	int feed;//먹이(1=동물,2=식물,3=잡식)
-	int breathe;//숨쉬는방법
-	int habitat;//사는곳
+	int breathe;//숨쉬는방법(1=허파,2=아가미)
+	int habitat;//사는곳(1=육지,2=바다,3=둘다)
 	int horns;//뿔개수
 	int strength;//체력
 	boolean alive;

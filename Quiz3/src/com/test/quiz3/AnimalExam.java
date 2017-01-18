@@ -2,6 +2,27 @@ package com.test.quiz3;
 
 public class AnimalExam {
 	public static void main(String args[]) {
+		Animal tiger1 = new Animal();
+		tiger1.feed = 1;
+		tiger1.strength = tiger1.weight = 310;
+		tiger1.skin = 1;
+		tiger1.speed = 65;
+		tiger1.life = 26; tiger1.age = 2;
+		
+		Tiger tiger2 = new Tiger(2);
+		
+		System.out.println(tiger1.attack(tiger2));
+		System.out.println(tiger2.strength);
+		System.out.println(tiger2.attack(tiger1));
+		System.out.println(tiger1.strength);
+		System.out.println("-------------------------");
+		System.out.println(tiger2.attack(tiger1));
+		System.out.println(tiger1.strength);
+		System.out.println(tiger1.attack(tiger2));
+		System.out.println(tiger2.strength);
+		System.out.println("-------------------------");
+		
+		/////////////////////////////////////////////////
 		Animal tiger = new Animal();
 		Animal cow = new Animal();
 		tiger.feed = 1; cow.feed = 2;
