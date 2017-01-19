@@ -1,6 +1,9 @@
 package com.test.quiz3;
 
-public class Tiger extends Animal {
+public class Tiger extends Animal
+	implements Eatable,Attackable,
+		GroundHabitable
+{
 	public Tiger(int age) {
 		super();
 		this.feed = 1;
@@ -16,7 +19,7 @@ public class Tiger extends Animal {
 		super.eat(feed);*/
 	}
 	@Override
-	boolean eat(Animal feed) {
+	public boolean eat(Animal feed) {
 		if (this.alive == true) {
 			int satiety = feed.weight / 5;
 			this.weight += satiety;
@@ -26,11 +29,11 @@ public class Tiger extends Animal {
 		return false;
 	}
 	@Override
-	boolean eat(Plant feed) { 
+	public boolean eat(Plant feed) { 
 		return false;
 	}
 	@Override
-	boolean attack(Animal enemy) {
+	public boolean attack(Animal enemy) {
 		if (this.alive == true && enemy.alive == true) {
 			int defence = enemy.weight;
 			defence = defence / (enemy.age*100/enemy.life);
@@ -56,5 +59,8 @@ public class Tiger extends Animal {
 			}
 		}
 		return false;
+	}
+	void smoking() {
+		System.out.println("뻐끔뻐끔");
 	}
 }
