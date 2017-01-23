@@ -25,6 +25,7 @@ public class Animal implements Serializable {
 			animal = (Animal)ois.readObject();
 			ois.close(); fis.close();
 		} catch(Exception e) {
+			animal = new Animal();
 			e.printStackTrace();
 		}
 		return animal;
