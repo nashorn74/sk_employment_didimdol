@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= title
+  form(method="POST" action="/insert")
+    p 제목:
+    input(type="text" name="title")
+    p 내용:
+    textarea(name="content" rows="10")
+    input(type="submit" value="저장")

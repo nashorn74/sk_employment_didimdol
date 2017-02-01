@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1= title
+  - each article in articles
+    a(href="/detail/#{article.no}") #{article.title}
+    form(method="POST" action="/delete")
+      input(type="hidden" name="no" value="#{article.no}")
+      input(type="submit" value="삭제")
+  p
+  p
+  a(href="/write") 글쓰기
