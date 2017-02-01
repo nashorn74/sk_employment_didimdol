@@ -26,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
-
+/////////////////////////////////////////////////
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
   host     : 'localhost',
@@ -35,11 +35,36 @@ var connection = mysql.createConnection({
   database : 'didimdol'
 }); 
 connection.connect();
+/////////////////////////////////////////////////
+var MongoClient = require('mongodb').MongoClient;
+var url = 'mongodb://localhost:27017/didimdol';
+var dbObj = null;
+MongoClient.connect(url, function(err, db) {
+	console.log("Connected correctly to server");
+	dbObj = db;
+	//db.close();
+});
+/////////////////////////////////////////////////
 app.get('/', function(req,res){
-	connection.query("select * from movie",
-			function(err, results, fields) {
+	connection.query("select * from movie", function(err, results, fields) {
 		if (err) res.send(err);
-		else res.send(JSON.stringify(results));
+		else {
+			var movie = dbObj.collection('movie');
+			movie.find({}).toArray(function(err,docs){//MongoDB 조회 쿼리
+				if (err) res.send(err);
+				else {//APPLICATION SIDE JOIN-----------------------
+					for (var i = 0; i < results.length; i++) {
+						for (var j = 0; j < docs.length; j++) {
+							if (results[i].no == docs[j].no) {
+								results[i].review = docs[j].review;
+								break;
+							}
+						}
+					}
+					res.send(JSON.stringify(results));
+				}
+			});
+		}
 	});
 });
 app.get('/movie',function(req,res){
@@ -58,7 +83,20 @@ app.post('/', function(req,res){
 			},
 			function(err, result){
 				if (err) res.send(err);
-				else res.send(JSON.stringify(result));
+				else {
+					if (req.body.review != undefined) {
+						var movie = dbObj.collection('movie');
+						movie.save(
+							{
+								no:result.insertId,
+								review:req.body.review
+							}, function(err2, result2){
+								res.send(JSON.stringify(result));
+							});	
+					} else {
+						res.send(JSON.stringify(result));
+					}
+				}
 			});
 });
 app.delete('/', function(req,res){
@@ -70,10 +108,16 @@ app.delete('/', function(req,res){
 });
 app.delete('/movie', function(req,res) {
 	connection.query("delete from movie where no=?",
-			req.body.no,
+			Number(req.body.no),
 			function(err, result){
 		if (err) res.send(err);
-		else res.send(JSON.stringify(result));
+		else {
+			var movie = dbObj.collection('movie');
+			movie.remove({no:Number(req.body.no)}, 
+					function(err2, result2) {
+				res.send(JSON.stringify(result));
+			});
+		}
 	});
 });
 app.put('/',function(req,res){
@@ -97,10 +141,21 @@ app.put('/movie',function(req,res) {
 			[{
 				title:req.body.title,
 				director:req.body.director
-			}, req.body.no],
+			}, Number(req.body.no)],
 			function(err, result) {
 		if (err) res.send(err);
-		else res.send(JSON.stringify(result));
+		else {
+			if (req.body.review != undefined) {
+				var movie = dbObj.collection('movie');
+				movie.update({no:Number(req.body.no)},
+						{'$set':{review:req.body.review}},
+						function(err2, result2) {
+							res.send(JSON.stringify(result));
+						});
+			} else {
+				res.send(JSON.stringify(result));
+			}
+		}
 	});
 });
 //app.get('/', routes.index);
