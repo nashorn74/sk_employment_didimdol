@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  h1= title
+  form(method="POST" action="/insert")
+    p 번호:
+    input(type="text" name="no")
+    p 이름:
+    input(type="text" name="name")
+    p 성별(m=남자,f=여자):
+    input(type="text" name="gender")
+    p 전공:
+    input(type="text" name="major")
+    p 지역:
+    input(type="text" name="city")
+    p 팀:
+    input(type="text" name="team")
+    p
+    input(type="submit" value="추가")
+  - each student in students
+    form(method="POST" action="/update")
+      input(type="text" name="name" value="#{student.NAME}" size="5")
+      input(type="text" name="gender" value="#{student.GENDER}" size="5")
+      input(type="text" name="major" value="#{student.MAJOR}" size="5")
+      input(type="text" name="city" value="#{student.CITY}" size="5")
+      input(type="text" name="team" value="#{student.TEAM}" size="5")
+      input(type="hidden" name="no" value="#{student.NO}")
+      input(type="submit" value="수정")
+    form(method="POST" action="/delete")
+      input(type="hidden" name="no" value="#{student.NO}")
+      input(type="submit" value="삭제")
