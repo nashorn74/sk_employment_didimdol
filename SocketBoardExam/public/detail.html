@@ -7,13 +7,63 @@
 	</script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script type="text/javascript">
+	
+		$.urlParam = function(name){
+		    var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
+		    return results[1] || 0;
+		}
+		var no = $.urlParam('no');
+		console.log(no);
+	
 		var socket = null;
 		$(document).ready(function() {
 			socket = io.connect();//서버에 접속 시도
+			socket.emit('article_detail',
+					JSON.stringify({no:Number(no)}));
+			socket.emit('comment_list',
+					JSON.stringify({no:Number(no)}));
+			socket.on('article_detail',function(data){
+				data = JSON.parse(data);
+				$('#title').html(data.title);
+				$('#content').html(data.content);
+			});
+			socket.on('comment_list',function(data){
+				$('#comment_list').html('');
+				data = JSON.parse(data);
+				for (var i = 0; i < data.length; i++) {
+					$('#comment_list').append('<li>'+data[i].comment+
+						'&nbsp;<a href="javascript:delete_comment(\''+
+						data[i]._id+'\');">삭제</a></li>');
+				}
+			});
+			socket.on('comment_insert',function(data){
+				socket.emit('comment_list',
+						JSON.stringify({no:Number(no)}));
+			});
+			socket.on('comment_delete',function(data){
+				socket.emit('comment_list',
+						JSON.stringify({no:Number(no)}));
+			});
 		});
+		function add_comment() {
+			var comment = $('#comment').val();
+			socket.emit('comment_insert',
+					JSON.stringify({no:Number(no),comment:comment}));
+		}
+		function delete_comment(_id) {
+			socket.emit('comment_delete',
+					JSON.stringify({_id:_id}));
+		}
 	</script>
 </head>
 <body>
 	<h1>게시판 상세조회</h1>
+	<h2><span id="title"></span></h2>
+	<h3><span id="content"></span></h3>
+	<ul id="comment_list">
+	</ul>
+	<br>댓글 : <input type="text" id="comment">
+	<a href="javascript:add_comment();">추가</a>
+	<br><a href="list.html">전체목록</a>
 </body>
 </html>

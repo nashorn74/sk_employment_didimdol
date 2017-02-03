@@ -10,10 +10,22 @@
 		var socket = null;
 		$(document).ready(function() {
 			socket = io.connect();//서버에 접속 시도
+			socket.on('article_insert',function(data){
+				location.href = 'list.html';
+			});
 		});
+		function write() {
+			var title = $('#title').val();
+			var content = $('#content').val();
+			socket.emit('article_insert',
+					JSON.stringify({title:title,content:content}));
+		}
 	</script>
 </head>
 <body>
 	<h1>게시판 글쓰기</h1>
+	제목:<input type="text" id="title">
+	<BR>내용:<textarea id="content" rows="10"></textarea>
+	<BR><a href="javascript:write();">저장</a>
 </body>
 </html>
