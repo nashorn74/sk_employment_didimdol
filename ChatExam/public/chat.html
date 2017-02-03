@@ -1,0 +1,47 @@
+<html>
+<head>
+	<title>채팅방</title>
+	<script type="text/javascript" 
+		src=
+"http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
+	</script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+		var socket = null;
+		$(document).ready(function() {
+			socket = io.connect();//서버에 접속 시도
+			socket.on('message',function(data){
+				console.log(data);
+				data = JSON.parse(data);
+				console.log(data);
+				data.message = decodeURIComponent(data.message);
+				data.message = data.message.replace(/&/g, '&amp;');
+				data.message = data.message.replace(/\"/g, '&quot;');
+				data.message = data.message.replace(/\'/g, '&#39;');
+				data.message = data.message.replace(/</g, '&lt;');
+				data.message = data.message.replace(/>/g, '&gt;');
+				$('#chat_list').append('<li>'+data.message+'</li>');
+			});
+		});
+		function send() {
+			var message = $('#message').val();
+			message = encodeURIComponent(message);
+			socket.emit('message', JSON.stringify({
+				name:'홍길동', message:message
+			}));
+			$('#message').val('');
+		}
+	</script>
+</head>
+<body>
+	<H1>채팅방</H1>
+	<div>
+		<input type="text" id="message">
+		<a href="javascript:send();">전송</a>
+	</div>
+	<div>
+		<ul id="chat_list">
+		</ul>
+	</div>
+</body>
+</html>

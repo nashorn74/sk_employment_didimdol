@@ -1,0 +1,19 @@
+<html>
+<head>
+	<title>게시판 글쓰기</title>
+	<script type="text/javascript" 
+		src=
+"http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
+	</script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+		var socket = null;
+		$(document).ready(function() {
+			socket = io.connect();//서버에 접속 시도
+		});
+	</script>
+</head>
+<body>
+	<h1>게시판 글쓰기</h1>
+</body>
+</html>
